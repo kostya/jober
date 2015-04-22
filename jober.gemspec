@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Jober::VERSION
   spec.authors       = ["'Konstantin Makarchev'"]
   spec.email         = ["'kostya27@gmail.com'"]
-  spec.summary       = %q{Workers, queues managed by ruby fork.}
-  spec.description   = %q{Workers, queues managed by ruby fork.}
+  spec.summary       = %q{Simple background jobs, queues.}
+  spec.description   = %q{Simple background jobs, queues.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
