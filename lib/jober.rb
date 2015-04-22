@@ -30,7 +30,7 @@ module Jober
     end
 
     def add_class(klass)
-      unless klass.to_s.start_with?('Jober::')
+      unless %w{Manager AbstractTask Task Queue QueueBatch UniqueQueue Logger SharedObject}.map { |k| "Jober:#{k}" } .include?(klass.to_s)
         @classes ||= []
         @classes << klass
       end
@@ -79,13 +79,19 @@ module Jober
     def stats
       h = {}
       @classes.each do |klass|
-        start = Jober.redis.get("Jober:stats:#{klass.short_name}:start")
+        start = Jober.redis.get(key("stats:#{klass.short_name}:start"))
         start = Time.at(start.to_i) if start
-        _end = Jober.redis.get("Jober:stats:#{klass.short_name}:end")
+        _end = Jober.redis.get(key("stats:#{klass.short_name}:end"))
         _end = Time.at(_end.to_i) if _end
         h[klass.short_name] = {:start => start, :end => _end, :duration => (_end && start && _end >= start) ? (_end - start) : nil }
       end
       h
+    end
+
+    attr_accessor :namespace
+
+    def key(k)
+      "Jober:#{@namespace}:#{k}"
     end
   end
 end

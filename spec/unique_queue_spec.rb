@@ -16,7 +16,7 @@ end
 describe "Queue" do
   it "should set internals" do
     w = MyUniqueQueue.new
-    w.queue_name.should == 'Jober:queue:my_unique'
+    w.queue_name.should == 'Jober::queue:my_unique'
   end
 
   it "should execute Only for unique values" do

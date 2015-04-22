@@ -38,7 +38,7 @@ class Jober::AbstractTask
 private
 
   def write_timestamp(type)
-    Jober.redis.set("Jober:stats:#{self.class.short_name}:#{type}", Time.now.to_i.to_s)
+    Jober.redis.set(Jober.key("stats:#{self.class.short_name}:#{type}"), Time.now.to_i.to_s)
   rescue Object => ex
     error "#{ex.inspect} #{ex.backtrace}"
   end

@@ -24,6 +24,9 @@ class Task2 < Jober::Task
   end
 end
 
+class Jober::Bla < Jober::Task
+end
+
 describe "Task" do
   it "should execute" do
     w = WorkerTask.new
@@ -32,6 +35,7 @@ describe "Task" do
 
   it "should set short_name" do
     WorkerTask.short_name.should == 'worker'
+    Jober::Bla.short_name.should == 'bla'
   end
 
   it "should register class" do

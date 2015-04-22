@@ -9,7 +9,7 @@ class Jober::Queue < Jober::Task
     attr_accessor :queue_name
 
     def set_queue_name(q)
-      @queue_name = "Jober:queue:#{q}"
+      @queue_name = Jober.key("queue:#{q}")
     end
   end
 

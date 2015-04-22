@@ -14,7 +14,7 @@ end
 describe "QueueBatch" do
   it "should set internals" do
     w = MyBatchQueue.new
-    w.queue_name.should == 'Jober:queue:my_batch'
+    w.queue_name.should == 'Jober::queue:my_batch'
   end
 
   it "should execute" do

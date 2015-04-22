@@ -9,6 +9,11 @@ class Jober::SharedObject
       Marshal.load(r) if r
     end
 
+    def get_by_pure_key(name, conn = Jober.redis)
+      r = conn.get(name)
+      Marshal.load(r) if r
+    end
+
     def raw_get(name)
       Jober.redis.get(key(name))
     end
@@ -30,19 +35,24 @@ class Jober::SharedObject
     end
 
     def clear
-      Jober.redis.keys(key('*')).each { |k| del(k) }
+      Jober.redis.keys(key('*')).each { |k| Jober.redis.del(k) }
+    end
+
+    def keys(mask)
+      Jober.redis.keys(key(mask))
     end
 
     def values(mask)
-      Jober.redis.keys(key(mask)).map { |key| get(key) }
+      Jober.redis.keys(key(mask)).map { |key| get_by_pure_key(key) }
     end
 
     def key(name)
-      if name.start_with?('shared:')
+      k = if name.start_with?('shared:')
         name
       else
         "shared:#{name}"
       end
+      Jober.key(k)
     end
   end
 end

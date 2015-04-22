@@ -23,7 +23,7 @@ end
 describe "Queue" do
   it "should set internals" do
     w = MyQueue.new
-    w.queue_name.should == 'Jober:queue:my'
+    w.queue_name.should == 'Jober::queue:my'
   end
 
   it "should execute" do
