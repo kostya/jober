@@ -1,4 +1,4 @@
-require "Jober/version"
+require "jober/version"
 
 require 'redis'
 require 'logger'
