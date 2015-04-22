@@ -18,7 +18,11 @@ module Jober
     attr_reader :classes
 
     def logger
-      ::Logger.new(STDOUT)
+      @logger ||= ::Logger.new(STDOUT)
+    end
+
+    def logger=(l)
+      @logger = l
     end
 
     def redis
