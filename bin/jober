@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib]))
+require "Jober"
+
+task_name = ARGV[0]
+recursive = true
+
+while true
+  
+end

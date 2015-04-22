@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib]))
+require "jober"
+
+# TODO: require application environment
+# TODO: pass application name
+# TODO: pass logger_path
+
+m = Jober::Manager.new "test"
+m.run
