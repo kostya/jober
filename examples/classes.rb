@@ -2,7 +2,7 @@ require 'bundler/setup'
 Bundler.require :default
 
 class A < Jober::Task
-  every 10
+  interval 10
   def perform
     10.times do |i|
       info "enqueue to b #{i}"
@@ -12,7 +12,7 @@ class A < Jober::Task
 end
 
 class B < Jober::Queue
-  every 10
+  interval 10
   def perform(x)
     10.times do |i|
       info "enqueue to c #{x} #{i}"
@@ -22,7 +22,7 @@ class B < Jober::Queue
 end
 
 class C < Jober::Queue
-  every 10
+  interval 10
   def perform(x, i)
     10.times do |j|
       info "enqueue to d #{x} #{i} #{j}"
@@ -32,7 +32,7 @@ class C < Jober::Queue
 end
 
 class D < Jober::QueueBatch
-  every 10
+  interval 10
   batch_size 200
 
   def perform(*batch)
@@ -41,7 +41,8 @@ class D < Jober::QueueBatch
 end
 
 class E < Jober::Task
-  5.times { every 5 }
+  interval 5
+  workers 5
 
   def perform
     puts "start e :)"
@@ -50,7 +51,7 @@ class E < Jober::Task
 end
 
 class G < Jober::Task
-  every 10
+  interval 10
 
   def perform
     "asdfsdf" + 1
@@ -58,7 +59,7 @@ class G < Jober::Task
 end
 
 class F < Jober::Task
-  every 5
+  interval 5
   def perform
     sleep 100
   end

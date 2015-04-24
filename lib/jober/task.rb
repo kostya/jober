@@ -13,8 +13,8 @@ class Jober::Task < Jober::AbstractTask
     raise "implement me"
   end
 
-  def run(method)
-    send(method)
+  def run
+    perform
   end
 
 end

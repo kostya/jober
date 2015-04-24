@@ -1,7 +1,7 @@
 require_relative "spec_helper"
 
 class Man1 < Jober::Task
-  every 2
+  interval 2
 
   def perform
     sleep 3
@@ -9,7 +9,7 @@ class Man1 < Jober::Task
 end
 
 class Man2 < Jober::Task
-  every 2
+  interval 2
 
   def perform
     sleep 2

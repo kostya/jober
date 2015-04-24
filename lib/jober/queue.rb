@@ -18,11 +18,15 @@ class Jober::Queue < Jober::Task
   end
 
   def self.enqueue(*args)
-    Jober.redis.rpush(queue_name, Jober.dump(args))
+    Jober.redis.rpush(queue_name, Jober.dump_args(*args))
   end
 
   def self.len
     Jober.redis.llen(self.queue_name)
+  end
+
+  def len
+    self.class.len
   end
 
   def pop
@@ -30,10 +34,10 @@ class Jober::Queue < Jober::Task
     Jober.load(res) if res
   end
 
-  def run(method)
+  def run
     cnt = 0
     while args = pop
-      send(method, *args)
+      perform(*args)
       cnt += 1
 
       if stopped
@@ -42,6 +46,6 @@ class Jober::Queue < Jober::Task
 
       info { "processed #{cnt}" } if cnt % 1000 == 0
     end
-    info { "processed #{cnt}" }
+    info { "processed total #{cnt}" }
   end
 end

@@ -1,7 +1,7 @@
 require_relative "spec_helper"
 
 class A < Jober::Task
-  every 3000
+  interval 3000
 
   def perform
     10.times do |i|
@@ -12,7 +12,7 @@ class A < Jober::Task
 end
 
 class B < Jober::Queue
-  every 3
+  interval 3
 
   def perform(x)
     SO["b"] += x
@@ -20,7 +20,7 @@ class B < Jober::Queue
 end
 
 class C < Jober::QueueBatch
-  every 3
+  interval 3
 
   def perform(batch)
     SO["c"] = batch.flatten

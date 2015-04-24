@@ -9,13 +9,14 @@ class Jober::QueueBatch < Jober::Queue
     end
   end
 
-  def execute(method = :perform)
+  def run
     cnt = 0
     batch = []
     while args = pop
       batch << args
       if batch.length >= self.class.get_batch_size
-        execute_batch(method, batch)
+        execute_batch(batch)
+        info { "execute batch #{batch.length}, #{cnt} from #{len}" }
         batch = []
       end
       break if stopped
@@ -25,14 +26,15 @@ class Jober::QueueBatch < Jober::Queue
       if stopped
       	reschedule_batch(batch)
       else
-        execute_batch(method, batch)
+        execute_batch(batch)
       end
     end
+    info { "processes total #{cnt} " }
     self
   end
 
-  def execute_batch(method, batch)
-    send(method, batch)
+  def execute_batch(batch)
+    perform(batch)
   rescue Object => ex
     reschedule_batch(batch)
     Jober.exception(ex)

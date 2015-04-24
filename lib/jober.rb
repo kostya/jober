@@ -14,9 +14,6 @@ module Jober
   autoload :SharedObject, 'Jober/shared_object'
 
   class << self
-    attr_accessor :redis_config
-    attr_reader :classes
-
     def logger
       @logger ||= ::Logger.new(STDOUT)
     end
@@ -26,18 +23,23 @@ module Jober
     end
 
     def redis
-      Thread.current[:__redis__] ||= Redis.new(redis_config || {})
+      @redis ||= Redis.new
     end
 
-    def reset_redis
-      Thread.current[:__redis__] = nil
+    def redis=(r)
+      @redis = r
+    end
+
+    def internal_classes_names
+      @internal_classes_names ||= %w{Manager AbstractTask Task Queue QueueBatch UniqueQueue Logger SharedObject}.map { |k| "Jober::#{k}" }
+    end
+
+    def classes
+      @classes ||= []
     end
 
     def add_class(klass)
-      unless %w{Manager AbstractTask Task Queue QueueBatch UniqueQueue Logger SharedObject}.map { |k| "Jober:#{k}" } .include?(klass.to_s)
-        @classes ||= []
-        @classes << klass
-      end
+      classes << klass unless internal_classes_names.include?(klass.to_s)
     end
 
     def after_fork(&block)
@@ -48,12 +50,20 @@ module Jober
       @after_fork.call if @after_fork
     end
 
+    def reset_redis
+      redis.client.reconnect
+    end
+
     def dump(obj)
       Marshal.dump(obj)
     end
 
     def load(obj)
       Marshal.load(obj)
+    end
+
+    def dump_args(*args)
+      dump(args)
     end
 
     def exception(ex)
@@ -83,11 +93,13 @@ module Jober
     def stats
       h = {}
       @classes.each do |klass|
-        start = Jober.redis.get(key("stats:#{klass.short_name}:start"))
-        start = Time.at(start.to_i) if start
-        _end = Jober.redis.get(key("stats:#{klass.short_name}:end"))
-        _end = Time.at(_end.to_i) if _end
-        h[klass.short_name] = {:start => start, :end => _end, :duration => (_end && start && _end >= start) ? (_end - start) : nil }
+        _start = klass.read_timestamp(:start)
+        _end = klass.read_timestamp(:end)
+        h[klass.short_name] = {
+          :start => _start, 
+          :end => _end, 
+          :duration => (_end && _start && _end >= _start) ? (_end - _start) : nil 
+        }
       end
       h
     end
@@ -98,4 +110,8 @@ module Jober
       "Jober:#{@namespace}:#{k}"
     end
   end
+end
+
+# just empty module for store tasks
+module Jobs
 end

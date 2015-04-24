@@ -11,8 +11,11 @@ module Jober::Logger
 
   Logger::Severity.constants.each do |level|
     method_name = level.to_s.downcase
-    define_method method_name do |msg = nil, &block|
-      logger.send(method_name, msg, &block)
-    end
+
+    class_eval <<-Q
+      def #{method_name}(msg = nil, &block)
+        logger.send(:#{method_name}, "[\#{self.class.to_s}] \#{msg}", &block)
+      end
+    Q
   end
 end

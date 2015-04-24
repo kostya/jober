@@ -1,7 +1,8 @@
 require_relative "spec_helper"
 
 class FkMyParallel < Jober::Queue
-  5.times { |i| every 3 }
+  interval 3
+  workers 5
 
   def perform(arg)
     SO["fork:#{$$}"] ||= 0

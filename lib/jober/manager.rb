@@ -21,11 +21,8 @@ class Jober::Manager
 
   def run!
     @allowed_classes.each do |klass|
-      workers = klass.workers
-      workers = [[5 * 60, :perform]] if workers.empty?
-
-      workers.each do |interval, method|
-        Thread.new { start_worker(klass, interval, method) }
+      klass.get_workers.times do 
+        Thread.new { start_worker(klass, klass.get_interval) }
       end
     end
   end
@@ -71,17 +68,16 @@ class Jober::Manager
     yield
     true
   rescue Object => ex
-    p "exception #{ex.inspect} #{ex.backtrace}"
     Jober.exception(ex)
     nil
   end
 
-  def start_worker(klass, interval, method)
-    debug { "start worker for #{klass.to_s} #{method}" }
+  def start_worker(klass, interval)
+    debug { "start worker for #{klass.to_s}" }
     loop do
       pid = nil
       res = catch do
-        pid = run_task_fork(klass, method)
+        pid = run_task_fork(klass)
         add_pid(pid)
         Process.wait(pid)
         del_pid(pid)
@@ -94,8 +90,8 @@ class Jober::Manager
     end
   end
 
-  def run_task_fork(klass, method)
-    info "invoke #{klass} #{method}"
+  def run_task_fork(klass)
+    info "invoke #{klass}"
     fork do
       $0 = "#{@name} manager #{klass}"
       #$0 += " #{index}" if index > 0
@@ -112,7 +108,7 @@ class Jober::Manager
         inst.logger = ::Logger.new(logger_path)
       end
 
-      inst.execute(method)
+      inst.execute
     end
   end
 

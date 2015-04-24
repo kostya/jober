@@ -28,6 +28,8 @@ describe "Stats" do
     h['my1'][:start].should be
     h['my1'][:end].should be
     h['my1'][:duration].should be_within(0.1).of(2.0)
-    h['my2'].should == {:start=>nil, :end=>nil, :duration=>nil}
+    h['my2'][:start].should be
+    h['my2'][:end].should be
+    h['my2'][:duration].should be_within(0.1).of(0.0)
   end
 end

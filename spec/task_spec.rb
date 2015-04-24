@@ -14,12 +14,8 @@ class WorkerTask < Jober::Task
 end
 
 class Task2 < Jober::Task
-  every 3, :bla
-  every 5
-
-  def bla
-  end
-
+  interval 15
+  workers 2
   def perform
   end
 end
@@ -42,7 +38,8 @@ describe "Task" do
     Jober.classes.should include(WorkerTask)
   end
 
-  it "set some schedulers" do
-    Task2.workers.should == [[3, :bla], [5, :perform]]
+  it "set some settings" do
+    Task2.get_workers.should == 2
+    Task2.get_interval.should == 15
   end
 end

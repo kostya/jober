@@ -1,7 +1,7 @@
 require_relative "spec_helper"
 
 class MyChain < Jober::Task
-  every 3
+  interval 3
 
   def perform
     sleep 5
