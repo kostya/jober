@@ -109,6 +109,13 @@ module Jober
     def key(k)
       "Jober:#{@namespace}:#{k}"
     end
+
+    def find_class(klass_name)
+      names = classes.map(&:to_s)
+      return eval(klass_name) if names.include?(klass_name)
+      klass_name = "Jober::#{klass_name}"
+      return eval(klass_name) if names.include?(klass_name)
+    end
   end
 end
 

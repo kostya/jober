@@ -70,7 +70,7 @@ class Jober::AbstractTask
     info { "sleeping for %.1fm ..." % [int / 60.0] }
     Timeout.timeout(int.to_f) do
       loop do
-        sleep 0.2
+        sleep 0.3
         return if stopped
       end
     end

@@ -62,4 +62,14 @@ describe "Task" do
   	t.kill
   	SO["y"].should == 2
   end
+
+  it "run_loop should wait, until interval ready" do
+  	l = Loop2.new
+  	l.execute
+  	t = Thread.new { l.run_loop }
+  	sleep 2
+  	l.stopped = true
+  	sleep 0.3
+  	SO["y"].should == 1
+  end
 end
