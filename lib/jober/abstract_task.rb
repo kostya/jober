@@ -56,6 +56,7 @@ class Jober::AbstractTask
 
     # main loop
     loop do
+      break if stopped
       execute
       break if stopped
       sleeping
@@ -66,7 +67,7 @@ class Jober::AbstractTask
   end
 
   def sleeping(int = self.class.get_interval)
-    info { "sleeping for #{int} ..." }
+    info { "sleeping for %.1fm ..." % [int / 60.0] }
     Timeout.timeout(int.to_f) do
       loop do
         sleep 0.2
