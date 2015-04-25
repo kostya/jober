@@ -4,14 +4,14 @@ require 'redis'
 require 'logger'
 
 module Jober
-  autoload :Manager,      'Jober/manager'
-  autoload :AbstractTask, 'Jober/abstract_task'
-  autoload :Task,         'Jober/task'
-  autoload :Queue,        'Jober/queue'
-  autoload :QueueBatch,   'Jober/queue_batch'
-  autoload :UniqueQueue,  'Jober/unique_queue'
-  autoload :Logger,       'Jober/logger'
-  autoload :SharedObject, 'Jober/shared_object'
+  autoload :Manager,      'jober/manager'
+  autoload :AbstractTask, 'jober/abstract_task'
+  autoload :Task,         'jober/task'
+  autoload :Queue,        'jober/queue'
+  autoload :QueueBatch,   'jober/queue_batch'
+  autoload :UniqueQueue,  'jober/unique_queue'
+  autoload :Logger,       'jober/logger'
+  autoload :SharedObject, 'jober/shared_object'
 
   class << self
     def logger
