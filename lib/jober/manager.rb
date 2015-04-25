@@ -21,7 +21,7 @@ class Jober::Manager
 
   def run!
     @allowed_classes.each do |klass|
-      klass.get_workers.times do 
+      klass.get_workers.times do
         Thread.new { start_worker(klass, klass.get_interval) }
       end
     end

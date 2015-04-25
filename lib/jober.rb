@@ -97,9 +97,9 @@ module Jober
         _start = klass.read_timestamp(:start)
         _end = klass.read_timestamp(:end)
         h[klass.short_name] = {
-          :start => _start, 
-          :end => _end, 
-          :duration => (_end && _start && _end >= _start) ? (_end - _start) : nil 
+          :start => _start,
+          :end => _end,
+          :duration => (_end && _start && _end >= _start) ? (_end - _start) : nil
         }
       end
       h
