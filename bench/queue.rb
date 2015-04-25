@@ -6,7 +6,7 @@ $summary = 0
 
 class Bench < Jober::Queue
   def perform(x, y)
-  	$summary += x + y
+    $summary += x + y
   end
 end
 

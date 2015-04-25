@@ -24,7 +24,7 @@ class Jober::QueueBatch < Jober::Queue
     end
     if batch.length > 0
       if stopped
-      	reschedule_batch(batch)
+        reschedule_batch(batch)
       else
         execute_batch(batch)
       end
@@ -43,7 +43,7 @@ class Jober::QueueBatch < Jober::Queue
 private
 
   def reschedule_batch(batch)
-  	batch.reverse_each { |ev| Jober.redis.lpush(queue_name, Jober.dump(ev)) }
+    batch.reverse_each { |ev| Jober.redis.lpush(queue_name, Jober.dump(ev)) }
   end
 
 end

@@ -15,11 +15,11 @@ describe "Jober" do
   end
 
   it "find_class" do
-  	Jober.find_class("A1").should == A1
-  	Jober.find_class("A1234").should == nil
-  	Jober.find_class("B1").should == Jober::B1
-  	Jober.find_class("Jober::B1").should == Jober::B1
-  	Jober.find_class("B2").should == nil
-  	Jober.find_class("Jober::B2").should == nil
+    Jober.find_class("A1").should == A1
+    Jober.find_class("A1234").should == nil
+    Jober.find_class("B1").should == Jober::B1
+    Jober.find_class("Jober::B1").should == Jober::B1
+    Jober.find_class("B2").should == nil
+    Jober.find_class("Jober::B2").should == nil
   end
 end
