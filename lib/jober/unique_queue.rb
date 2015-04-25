@@ -5,7 +5,7 @@ class Jober::UniqueQueue < Jober::Queue
   end
 
   def self.enqueue(*args)
-    Jober.redis.sadd(queue_name, Jober.dump(args))
+    Jober.redis.sadd(queue_name, Jober.dump_args(*args))
   end
 
   def pop

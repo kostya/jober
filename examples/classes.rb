@@ -1,8 +1,9 @@
 require 'bundler/setup'
 Bundler.require :default
 
+Jober.default_interval = 10
+
 class A < Jober::Task
-  interval 10
   def perform
     10.times do |i|
       info "enqueue to b #{i}"
@@ -12,7 +13,6 @@ class A < Jober::Task
 end
 
 class B < Jober::Queue
-  interval 10
   def perform(x)
     10.times do |i|
       info "enqueue to c #{x} #{i}"
@@ -22,7 +22,6 @@ class B < Jober::Queue
 end
 
 class C < Jober::Queue
-  interval 10
   def perform(x, i)
     10.times do |j|
       info "enqueue to d #{x} #{i} #{j}"
@@ -32,7 +31,6 @@ class C < Jober::Queue
 end
 
 class D < Jober::QueueBatch
-  interval 10
   batch_size 200
 
   def perform(*batch)
@@ -41,7 +39,6 @@ class D < Jober::QueueBatch
 end
 
 class E < Jober::Task
-  interval 5
   workers 5
 
   def perform
@@ -51,15 +48,12 @@ class E < Jober::Task
 end
 
 class G < Jober::Task
-  interval 10
-
   def perform
     "asdfsdf" + 1
   end
 end
 
 class F < Jober::Task
-  interval 5
   def perform
     sleep 100
   end

@@ -9,7 +9,7 @@ class Jober::AbstractTask
     end
 
     def get_interval
-      @interval || 5 * 60
+      @interval || Jober.default_interval
     end
 
     def workers(n)
@@ -81,6 +81,11 @@ private
 
   def self.timestamp_key(type)
     Jober.key("stats:#{short_name}:#{type}")
+  end
+
+  def self.reset_timestamps
+    Jober.redis.del(timestamp_key(:start))
+    Jober.redis.del(timestamp_key(:end))
   end
 
   def self.read_timestamp(type)

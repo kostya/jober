@@ -68,6 +68,7 @@ module Jober
 
     def exception(ex)
       # redefine me
+      logger.error "#{ex.message} #{ex.backtrace}"
     end
 
     def underscore(str)
@@ -115,6 +116,18 @@ module Jober
       return eval(klass_name) if names.include?(klass_name)
       klass_name = "Jober::#{klass_name}"
       return eval(klass_name) if names.include?(klass_name)
+    end
+
+    def reset_timestamps
+      classes.each &:reset_timestamps
+    end
+
+    def default_interval
+      @default_interval ||= 5 * 60
+    end
+
+    def default_interval=(di)
+      @default_interval = di
     end
   end
 end
