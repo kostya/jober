@@ -130,6 +130,10 @@ module Jober
     def default_interval=(di)
       @default_interval = di
     end
+
+    def enqueue(queue_name, *args)
+      Jober.redis.rpush(queue_name, Jober.dump_args(*args))
+    end
   end
 end
 
