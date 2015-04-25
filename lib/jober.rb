@@ -4,14 +4,15 @@ require 'redis'
 require 'logger'
 
 module Jober
-  autoload :Manager,      'jober/manager'
-  autoload :AbstractTask, 'jober/abstract_task'
-  autoload :Task,         'jober/task'
-  autoload :Queue,        'jober/queue'
-  autoload :QueueBatch,   'jober/queue_batch'
-  autoload :UniqueQueue,  'jober/unique_queue'
-  autoload :Logger,       'jober/logger'
-  autoload :SharedObject, 'jober/shared_object'
+  autoload :Manager,          'jober/manager'
+  autoload :AbstractTask,     'jober/abstract_task'
+  autoload :Task,             'jober/task'
+  autoload :Queue,            'jober/queue'
+  autoload :QueueBatch,       'jober/queue_batch'
+  autoload :UniqueQueue,      'jober/unique_queue'
+  autoload :Logger,           'jober/logger'
+  autoload :SharedObject,     'jober/shared_object'
+  autoload :UniqueQueueBatch, 'jober/unique_queue_batch'
 
   class << self
     def logger
@@ -31,7 +32,7 @@ module Jober
     end
 
     def internal_classes_names
-      @internal_classes_names ||= %w{Manager AbstractTask Task Queue QueueBatch UniqueQueue Logger SharedObject}.map { |k| "Jober::#{k}" }
+      @internal_classes_names ||= %w{Manager AbstractTask Task Queue QueueBatch UniqueQueue UniqueQueueBatch Logger SharedObject}.map { |k| "Jober::#{k}" }
     end
 
     def classes

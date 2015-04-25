@@ -23,6 +23,7 @@ class C < Jober::QueueBatch
   interval 3
 
   def perform(batch)
+    sleep 0.2
     SO["c"] = batch.flatten
   end
 end
