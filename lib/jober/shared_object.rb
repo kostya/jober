@@ -1,21 +1,29 @@
 class Jober::SharedObject
   class << self
     def set(name, obj, conn = Jober.redis)
-      conn.set(key(name), Marshal.dump(obj))
+      Jober.catch do
+        conn.set(key(name), Marshal.dump(obj))
+      end
     end
 
     def get(name, conn = Jober.redis)
-      r = conn.get(key(name))
-      Marshal.load(r) if r
+      Jober.catch do
+        r = conn.get(key(name))
+        Marshal.load(r) if r
+      end
     end
 
     def get_by_pure_key(name, conn = Jober.redis)
-      r = conn.get(name)
-      Marshal.load(r) if r
+      Jober.catch do
+        r = conn.get(name)
+        Marshal.load(r) if r
+      end
     end
 
     def raw_get(name)
-      Jober.redis.get(key(name))
+      Jober.catch do
+        Jober.redis.get(key(name))
+      end
     end
 
     def [](name)
@@ -27,23 +35,33 @@ class Jober::SharedObject
     end
 
     def inc(name, by = 1)
-      Jober.redis.incrby(key(name), by)
+      Jober.catch do
+        Jober.redis.incrby(key(name), by)
+      end
     end
 
     def del(name)
-      Jober.redis.del key(name)
+      Jober.catch do
+        Jober.redis.del key(name)
+      end
     end
 
     def clear
-      Jober.redis.keys(key('*')).each { |k| Jober.redis.del(k) }
+      Jober.catch do
+        Jober.redis.keys(key('*')).each { |k| Jober.redis.del(k) }
+      end
     end
 
     def keys(mask)
-      Jober.redis.keys(key(mask))
+      Jober.catch do
+        Jober.redis.keys(key(mask))
+      end
     end
 
     def values(mask)
-      Jober.redis.keys(key(mask)).map { |key| get_by_pure_key(key) }
+      Jober.catch do
+        Jober.redis.keys(key(mask)).map { |key| get_by_pure_key(key) }
+      end
     end
 
     def key(name)
