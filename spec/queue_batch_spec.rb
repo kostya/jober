@@ -1,4 +1,4 @@
-require_relative "spec_helper"
+require "#{File.dirname(__FILE__)}/spec_helper"
 
 class MyBatchQueue < Jober::QueueBatch
   batch_size 6

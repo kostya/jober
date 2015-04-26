@@ -1,4 +1,4 @@
-require_relative "spec_helper"
+require "#{File.dirname(__FILE__)}/spec_helper"
 
 class A < Jober::Task
   interval 3000

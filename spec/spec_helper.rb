@@ -4,7 +4,7 @@ Bundler.require :default
 Jober::SharedObject
 SO = Jober::SharedObject
 
-Jober.logger = Logger.new("#{__dir__}/spec.log")
+Jober.logger = Logger.new("#{File.dirname(__FILE__)}/spec.log")
 
 RSpec.configure do |config|
   config.expect_with(:rspec) { |c| c.syntax = :should }

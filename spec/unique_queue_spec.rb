@@ -1,4 +1,4 @@
-require_relative "spec_helper"
+require "#{File.dirname(__FILE__)}/spec_helper"
 
 class MyUniqueQueue < Jober::UniqueQueue
   def initialize(*args)
