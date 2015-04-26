@@ -108,7 +108,9 @@ class Jober::Manager
         inst.logger = ::Logger.new(logger_path)
       end
 
-      inst.execute
+      catch do
+        inst.execute
+      end
     end
   end
 
