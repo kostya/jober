@@ -23,8 +23,7 @@ class C < Jober::QueueBatch
   interval 3
 
   def perform(batch)
-    sleep 0.5
-    SO["c"] = batch.flatten
+    SO["c"] += batch.flatten
   end
 end
 
@@ -39,6 +38,7 @@ end
 describe "integration" do
   it "should work" do
     SO["b"] = 0
+    SO["c"] = []
     run_manager_for(5, [A, B, C, D])
     SO["b"].should == 45
     SO["c"].should == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
