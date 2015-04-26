@@ -46,7 +46,7 @@ unless klass
   exit(1)
 end
 
-inst = klass.new(options[:worker_id] || 0, options[:workers_count] || 1)
+inst = klass.new(options)
 
 if options[:once]
   inst.execute

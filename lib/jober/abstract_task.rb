@@ -30,12 +30,16 @@ class Jober::AbstractTask
     base.interval(self.get_interval)
   end
 
-  def initialize(worker_id = 0, workers_count = 1)
+  # opts:
+  #   :worker_id
+  #   :workers_count
+  #   :skip_
+  def initialize(opts = {})
     @stopped = false
     trap("QUIT") { @stopped = true }
     trap("INT")  { @stopped = true }
-    @worker_id = worker_id
-    @workers_count = workers_count
+    @worker_id = opts[:worker_id] || 0
+    @workers_count = opts[:workers_count] || 1
   end
 
   def execute
@@ -56,8 +60,8 @@ class Jober::AbstractTask
     info { "running loop" }
 
     # wait until interval + last end
-    if self.class.get_workers <= 1 && (_end = self.class.read_timestamp(:finished)) && (Time.now - _end < self.class.get_interval)
-      sleeping(self.class.get_interval - (Time.now - _end))
+    if self.class.get_workers <= 1 && (finished = self.class.read_timestamp(:finished)) && (Time.now - finished < self.class.get_interval)
+      sleeping(self.class.get_interval - (Time.now - finished))
     end
 
     # main loop

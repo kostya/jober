@@ -98,7 +98,7 @@ class Jober::Manager
       Jober.call_after_fork
       Jober.reset_redis
 
-      inst = klass.new(idx, count) # class_name parent of Jober::Task
+      inst = klass.new(:worker_id => idx, :workers_count => count) # class_name parent of Jober::Task
 
       if @logger_path
         logger_path = File.join(@logger_path, "#{klass.short_name}.log")
