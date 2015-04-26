@@ -51,8 +51,8 @@ describe "Task" do
     t.kill
     SO["x"].should == 4
     st = Jober.stats['loop1']
-    (st[:end] - st[:start]).should be_within(0.001).of(0)
-    (Time.now - st[:end]).should be_within(0.7).of(1)
+    (st[:finished] - st[:started]).should be_within(0.001).of(0)
+    (Time.now - st[:finished]).should be_within(0.7).of(1)
   end
 
   it "run_loop should wait, until interval ready" do

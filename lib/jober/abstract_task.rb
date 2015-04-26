@@ -41,18 +41,22 @@ class Jober::AbstractTask
   def execute
     info "=> start"
     @start_at = Time.now
-    self.class.write_timestamp(:start)
+    self.class.write_timestamp(:started)
     run
-    self.class.write_timestamp(:end)
+    self.class.write_timestamp(:finished)
+    self.class.del_timestamp(:crashed)
     info "<= end (in #{Time.now - @start_at})"
     self
+  rescue Object
+    self.class.write_timestamp(:crashed)
+    raise
   end
 
   def run_loop
     info { "running loop" }
 
     # wait until interval + last end
-    if self.class.get_workers <= 1 && (_end = self.class.read_timestamp(:end)) && (Time.now - _end < self.class.get_interval)
+    if self.class.get_workers <= 1 && (_end = self.class.read_timestamp(:finished)) && (Time.now - _end < self.class.get_interval)
       sleeping(self.class.get_interval - (Time.now - _end))
     end
 
@@ -86,20 +90,27 @@ private
   end
 
   def self.reset_timestamps
-    Jober.redis.del(timestamp_key(:start))
-    Jober.redis.del(timestamp_key(:end))
+    del_timestamp :started
+    del_timestamp :finished
   end
 
   def self.read_timestamp(type)
-    res = Jober.redis.get(timestamp_key(type))
-    Time.at(res.to_i) if res
-  rescue Object => ex
+    Jober.catch do
+      res = Jober.redis.get(timestamp_key(type))
+      Time.at(res.to_i) if res
+    end
   end
 
   def self.write_timestamp(type)
-    Jober.redis.set(timestamp_key(type), Time.now.to_i.to_s)
-  rescue Object => ex
-    error "#{ex.inspect} #{ex.backtrace}"
+    Jober.catch do
+      Jober.redis.set(timestamp_key(type), Time.now.to_i.to_s)
+    end
+  end
+
+  def self.del_timestamp(type)
+    Jober.catch do
+      Jober.redis.del(timestamp_key(type))
+    end
   end
 
 end

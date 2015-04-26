@@ -35,5 +35,12 @@ describe "manage pids" do
       sleep 1.1
       m.pids.size.should == 2
     end
+
+    st = Jober.stats
+    st['man1'][:crashed].should_not be
+    st['man2'][:crashed].should be
+
+    st['man1'][:finished].should be
+    st['man2'][:finished].should_not be
   end
 end

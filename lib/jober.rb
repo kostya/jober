@@ -95,12 +95,14 @@ module Jober
     def stats
       h = {}
       @classes.each do |klass|
-        _start = klass.read_timestamp(:start)
-        _end = klass.read_timestamp(:end)
+        started = klass.read_timestamp(:started)
+        finished = klass.read_timestamp(:finished)
+        crashed = klass.read_timestamp(:crashed)
         h[klass.short_name] = {
-          :start => _start,
-          :end => _end,
-          :duration => (_end && _start && _end >= _start) ? (_end - _start) : nil
+          :started => started,
+          :finished => finished,
+          :crashed => crashed,
+          :duration => (finished && started && finished >= started) ? (finished - started) : nil
         }
       end
       h
@@ -135,6 +137,12 @@ module Jober
 
     def enqueue(queue_name, *args)
       Jober.redis.rpush(queue_name, Jober.dump_args(*args))
+    end
+
+    def catch(&block)
+      yield
+    rescue Object => ex
+      Jober.exception(ex)
     end
   end
 end
