@@ -23,16 +23,26 @@ class C < Jober::QueueBatch
   interval 3
 
   def perform(batch)
-    sleep 0.2
+    sleep 0.5
     SO["c"] = batch.flatten
+  end
+end
+
+class D < Jober::Task
+  workers 2
+
+  def perform
+    SO["wrk:#{@worker_id}:#{@workers_count}"] = 1
   end
 end
 
 describe "integration" do
   it "should work" do
     SO["b"] = 0
-    run_manager_for(5, [A, B, C])
+    run_manager_for(5, [A, B, C, D])
     SO["b"].should == 45
     SO["c"].should == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    SO.keys("wrk:*").sort.should == ["Jober::shared:wrk:0:2", "Jober::shared:wrk:1:2"]
   end
 end

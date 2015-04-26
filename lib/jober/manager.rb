@@ -21,8 +21,8 @@ class Jober::Manager
 
   def run!
     @allowed_classes.each do |klass|
-      klass.get_workers.times do
-        Thread.new { start_worker(klass, klass.get_interval) }
+      klass.get_workers.times do |idx|
+        Thread.new { start_worker(klass, klass.get_interval, idx, klass.get_workers) }
       end
     end
   end
@@ -72,12 +72,12 @@ class Jober::Manager
     nil
   end
 
-  def start_worker(klass, interval)
+  def start_worker(klass, interval, idx, count)
     debug { "start worker for #{klass.to_s}" }
     loop do
       pid = nil
       res = catch do
-        pid = run_task_fork(klass)
+        pid = run_task_fork(klass, idx, count)
         add_pid(pid)
         Process.wait(pid)
         del_pid(pid)
@@ -90,7 +90,7 @@ class Jober::Manager
     end
   end
 
-  def run_task_fork(klass)
+  def run_task_fork(klass, idx, count)
     info "invoke #{klass}"
     fork do
       $0 = "#{@name} manager #{klass}"
@@ -98,7 +98,7 @@ class Jober::Manager
       Jober.call_after_fork
       Jober.reset_redis
 
-      inst = klass.new # class_name parent of Jober::Task
+      inst = klass.new(idx, count) # class_name parent of Jober::Task
 
       if @logger_path
         logger_path = File.join(@logger_path, "#{klass.short_name}.log")

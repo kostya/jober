@@ -30,10 +30,12 @@ class Jober::AbstractTask
     base.interval(self.get_interval)
   end
 
-  def initialize
+  def initialize(worker_id = 0, workers_count = 1)
     @stopped = false
     trap("QUIT") { @stopped = true }
     trap("INT")  { @stopped = true }
+    @worker_id = worker_id
+    @workers_count = workers_count
   end
 
   def execute

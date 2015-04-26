@@ -24,6 +24,14 @@ OptionParser.new do |opts|
     options[:once] = o
   end
 
+  opts.on( '-i', '--worker_id', 'worker_id for multiple workers' ) do |o|
+    options[:worker_id] = o
+  end
+
+  opts.on( '-w', '--workers_count', 'workers_count for multiple workers' ) do |o|
+    options[:workers_count] = o
+  end
+
 end.parse!
 
 if req = options[:require]
@@ -38,8 +46,10 @@ unless klass
   exit(1)
 end
 
+inst = klass.new(options[:worker_id] || 0, options[:workers_count] || 1)
+
 if options[:once]
-  klass.new.execute
+  inst.execute
 else
-  klass.new.run_loop
+  inst.run_loop
 end
