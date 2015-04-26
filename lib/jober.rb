@@ -143,6 +143,7 @@ module Jober
       yield
     rescue Object => ex
       Jober.exception(ex)
+      nil
     end
   end
 end
