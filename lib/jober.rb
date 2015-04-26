@@ -87,7 +87,7 @@ module Jober
       h = {}
       @classes.each do |klass|
         next unless klass.ancestors.include?(Jober::Queue)
-        h[klass.short_name] = klass.len
+        h[klass.queue_name_base] = klass.len
       end
       h
     end

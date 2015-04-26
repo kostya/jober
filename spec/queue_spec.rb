@@ -39,7 +39,6 @@ describe "Queue" do
 
   it "custom queue name" do
     10.times { Jasdfoadsfjaf.enqueue }
-    p Jober.llens
     Jober.llens['human_name'].should == 10
   end
 end
