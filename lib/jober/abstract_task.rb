@@ -33,13 +33,14 @@ class Jober::AbstractTask
   # opts:
   #   :worker_id
   #   :workers_count
-  #   :skip_
+  #   :skip_delay
   def initialize(opts = {})
     @stopped = false
     trap("QUIT") { @stopped = true }
     trap("INT")  { @stopped = true }
     @worker_id = opts[:worker_id] || 0
     @workers_count = opts[:workers_count] || 1
+    @skip_delay = opts[:skip_delay]
   end
 
   def execute
@@ -60,7 +61,12 @@ class Jober::AbstractTask
     info { "running loop" }
 
     # wait until interval + last end
-    if self.class.get_workers <= 1 && (finished = self.class.read_timestamp(:finished)) && (Time.now - finished < self.class.get_interval)
+    if self.class.get_workers <= 1 &&
+        (finished = self.class.read_timestamp(:finished)) &&
+        (Time.now - finished < self.class.get_interval) &&
+        !self.class.pop_skip_delay_flag! &&
+        !@skip_delay
+
       sleeping(self.class.get_interval - (Time.now - finished))
     end
 
@@ -93,9 +99,18 @@ private
     Jober.key("stats:#{short_name}:#{type}")
   end
 
-  def self.reset_timestamps
-    del_timestamp :started
-    del_timestamp :finished
+  def self.pop_skip_delay_flag!
+    Jober.catch do
+      res = Jober.redis.get(timestamp_key(:skip))
+      Jober.redis.del(timestamp_key(:skip)) if res
+      !!res
+    end
+  end
+
+  def self.skip_delay!
+    Jober.catch do
+      Jober.redis.set(timestamp_key(:skip), '1')
+    end
   end
 
   def self.read_timestamp(type)

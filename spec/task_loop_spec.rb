@@ -72,4 +72,32 @@ describe "Task" do
     sleep 0.3
     SO["y"].should == 1
   end
+
+  it "if skip_delay!, should start imidiately" do
+    l = Loop2.new
+    l.execute
+    Loop2.skip_delay!
+    t = Thread.new { l.run_loop }
+    sleep 2
+    l.stopped = true
+    sleep 0.3
+    SO["y"].should == 2
+  end
+
+  it "if skip_delay by option, should start imidiately" do
+    l = Loop2.new(:skip_delay => true)
+    l.execute
+    t = Thread.new { l.run_loop }
+    sleep 2
+    l.stopped = true
+    sleep 0.3
+    SO["y"].should == 2
+  end
+
+  it "skip_delay!" do
+    Loop2.pop_skip_delay_flag!.should == false
+    Loop2.skip_delay!
+    Loop2.pop_skip_delay_flag!.should == true
+    Loop2.pop_skip_delay_flag!.should == false
+  end
 end

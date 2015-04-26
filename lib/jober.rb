@@ -123,8 +123,8 @@ module Jober
       return eval(klass_name) if names.include?(klass_name)
     end
 
-    def reset_timestamps
-      classes.each &:reset_timestamps
+    def skip_delay!
+      classes.each &:skip_delay!
     end
 
     def default_interval
