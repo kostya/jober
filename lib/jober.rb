@@ -117,6 +117,8 @@ module Jober
       return eval(klass_name) if names.include?(klass_name)
       klass_name = "Jober::#{klass_name}"
       return eval(klass_name) if names.include?(klass_name)
+      klass_name = "Jobs::#{klass_name}"
+      return eval(klass_name) if names.include?(klass_name)
     end
 
     def reset_timestamps
