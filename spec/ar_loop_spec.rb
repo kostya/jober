@@ -10,6 +10,7 @@ class MyAR < Jober::ARLoop
 
   def perform(batch)
     SO["names"] += batch.map(&:name)
+    batch.size
   end
 end
 
@@ -43,7 +44,7 @@ describe "ARLoop" do
     pg_create_schema
     create_data
   end
-  
+
   before :each do
     SO["names"] = []
   end

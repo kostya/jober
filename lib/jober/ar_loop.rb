@@ -25,9 +25,9 @@ class Jober::ARLoop < Jober::Task
     info { "full count to process #{count}" }
 
     prox.find_in_batches(:batch_size => self.class.get_batch_size) do |batch|
-      perform(batch)
+      res = perform(batch)
       cnt += batch.size
-      info { "process batch #{cnt} from #{count}" }
+      info { "process batch #{res.inspect}, #{cnt} from #{count}, lastid #{batch.last.id}" }
       break if stopped
     end
 
