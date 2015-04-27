@@ -14,11 +14,17 @@ class Jober::ARLoop < Jober::Task
   end
 
   def run
+    prox = proxy
+
+    if @worker_id && @workers_count && !@opts[:no_auto_proxy]
+      prox = prox.where("id % #{@workers_count} = #{@worker_id}")
+    end
+
     cnt = 0
-    count = proxy.count
+    count = prox.count
     info { "full count to process #{count}" }
 
-    proxy.find_in_batches(:batch_size => self.class.get_batch_size) do |batch|
+    prox.find_in_batches(:batch_size => self.class.get_batch_size) do |batch|
       perform(batch)
       cnt += batch.size
       info { "process batch #{cnt} from #{count}" }

@@ -38,16 +38,25 @@ end
 class User < ActiveRecord::Base; end
 
 describe "ARLoop" do
-  before :each do
+  before :all do
     pg_drop_data rescue nil
     pg_create_schema
     create_data
   end
+  
+  before :each do
+    SO["names"] = []
+  end
 
   it "should work" do
-    SO["names"] = []
     MyAR.new.execute
     SO["names"].size.should == 46
     SO["names"].last.should == "unknown 99"
+  end
+
+  it "use auto proxy sharding" do
+    MyAR.new(:worker_id => 1, :workers_count => 4).execute
+    SO["names"].size.should == 10
+    SO["names"].last.should == "unknown 96"
   end
 end

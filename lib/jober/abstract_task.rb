@@ -35,6 +35,7 @@ class Jober::AbstractTask
   #   :workers_count
   #   :skip_delay
   def initialize(opts = {})
+    @opts = opts
     @stopped = false
     trap("QUIT") { @stopped = true }
     trap("INT")  { @stopped = true }
