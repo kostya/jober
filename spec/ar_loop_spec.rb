@@ -60,4 +60,10 @@ describe "ARLoop" do
     SO["names"].size.should == 10
     SO["names"].last.should == "unknown 96"
   end
+
+  it "where" do
+    MyAR.new(:where => "years < 24").execute
+    SO["names"].size.should == 15
+    SO["names"].last.should == "unknown 94"
+  end
 end

@@ -20,6 +20,8 @@ class Jober::ARLoop < Jober::Task
       prox = prox.where("id % #{@workers_count} = #{@worker_id}")
     end
 
+    prox = prox.where(@opts[:where]) if @opts[:where]
+
     cnt = 0
     count = prox.count
     info { "full count to process #{count}" }
