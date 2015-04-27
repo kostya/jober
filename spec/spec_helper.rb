@@ -33,3 +33,20 @@ def run_manager_for(timeout, classes, &block)
   sleep 0.1
   m
 end
+
+def run_threaded_manager_for(timeout, classes, &block)
+  m = Jober::ThreadedManager.new classes
+  t = Thread.new do
+    m.run_loop
+  end
+
+  if block
+    block.call(m)
+  else
+    sleep timeout
+  end
+
+  m.stop!
+  t.join
+  m
+end

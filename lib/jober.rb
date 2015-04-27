@@ -5,6 +5,7 @@ require 'logger'
 
 module Jober
   autoload :Manager,          'jober/manager'
+  autoload :ThreadedManager,  'jober/threaded_manager'
   autoload :AbstractTask,     'jober/abstract_task'
   autoload :Task,             'jober/task'
   autoload :Queue,            'jober/queue'
@@ -33,7 +34,7 @@ module Jober
     end
 
     def internal_classes_names
-      @internal_classes_names ||= (%w{Manager AbstractTask Task Queue} +
+      @internal_classes_names ||= (%w{Manager ThreadedManager AbstractTask Task Queue} +
         %w{QueueBatch UniqueQueue UniqueQueueBatch Logger SharedObject ARLoop}).map { |k| "Jober::#{k}" }
     end
 

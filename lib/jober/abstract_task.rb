@@ -94,6 +94,10 @@ class Jober::AbstractTask
   rescue Timeout::Error
   end
 
+  def stop!
+    @stopped = true
+  end
+
 private
 
   def self.timestamp_key(type)
