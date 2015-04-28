@@ -106,7 +106,7 @@ private
   end
 
   def self.pop_skip_delay_flag!
-    catch do
+    self.catch do
       res = Jober.redis.get(timestamp_key(:skip))
       Jober.redis.del(timestamp_key(:skip)) if res
       !!res
@@ -114,26 +114,26 @@ private
   end
 
   def self.skip_delay!
-    catch do
+    self.catch do
       Jober.redis.set(timestamp_key(:skip), '1')
     end
   end
 
   def self.read_timestamp(type)
-    catch do
+    self.catch do
       res = Jober.redis.get(timestamp_key(type))
       Time.at(res.to_i) if res
     end
   end
 
   def self.write_timestamp(type)
-    catch do
+    self.catch do
       Jober.redis.set(timestamp_key(type), Time.now.to_i.to_s)
     end
   end
 
   def self.del_timestamp(type)
-    catch do
+    self.catch do
       Jober.redis.del(timestamp_key(type))
     end
   end
