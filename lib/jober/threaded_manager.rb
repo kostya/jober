@@ -1,5 +1,6 @@
 class Jober::ThreadedManager
   include Jober::Logger
+  include Jober::Exception
 
   def default_sleep=(ds)
     @default_sleep = ds
@@ -71,11 +72,9 @@ private
     Thread.new do
       loop do
         break if @stopped
-        Jober.catch do
-          obj.run_loop
-        end
+        obj.catch { obj.run_loop }
         break if @stopped
-        sleep 0.5
+        sleep 1.0
       end
     end
   end

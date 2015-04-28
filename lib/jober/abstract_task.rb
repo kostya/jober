@@ -2,6 +2,7 @@ require 'timeout'
 
 class Jober::AbstractTask
   include Jober::Logger
+  include Jober::Exception
 
   class << self
     def interval(interval)
@@ -105,7 +106,7 @@ private
   end
 
   def self.pop_skip_delay_flag!
-    Jober.catch do
+    catch do
       res = Jober.redis.get(timestamp_key(:skip))
       Jober.redis.del(timestamp_key(:skip)) if res
       !!res
@@ -113,26 +114,26 @@ private
   end
 
   def self.skip_delay!
-    Jober.catch do
+    catch do
       Jober.redis.set(timestamp_key(:skip), '1')
     end
   end
 
   def self.read_timestamp(type)
-    Jober.catch do
+    catch do
       res = Jober.redis.get(timestamp_key(type))
       Time.at(res.to_i) if res
     end
   end
 
   def self.write_timestamp(type)
-    Jober.catch do
+    catch do
       Jober.redis.set(timestamp_key(type), Time.now.to_i.to_s)
     end
   end
 
   def self.del_timestamp(type)
-    Jober.catch do
+    catch do
       Jober.redis.del(timestamp_key(type))
     end
   end

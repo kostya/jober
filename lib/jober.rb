@@ -15,6 +15,7 @@ module Jober
   autoload :SharedObject,     'jober/shared_object'
   autoload :UniqueQueueBatch, 'jober/unique_queue_batch'
   autoload :ARLoop,           'jober/ar_loop'
+  autoload :Exception,        'jober/exception'
 
   class << self
     def logger

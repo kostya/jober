@@ -39,7 +39,8 @@ end
 
 class T5 < Jober::Task
   def perform
-    raise :jopa
+    SO["t5"] += 1
+    1 + "bla" # raising
   end
 end
 
@@ -55,6 +56,7 @@ describe Jober::ThreadedManager do
     SO["t2"] = 0
     SO["t3"] = 0
     SO["t41"] = 0
+    SO["t5"] = 0
   end
 
   it "just work" do
@@ -80,7 +82,8 @@ describe Jober::ThreadedManager do
   end
 
   it "run multi tasks, but one raised" do
-    run_threaded_manager_for(0.5, [T41, T5])
+    run_threaded_manager_for(2, [T41, T5])
+    SO["t5"].should == 2
   end
 
   it "infinite task should be stopped by kill" do

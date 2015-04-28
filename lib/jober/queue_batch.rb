@@ -43,7 +43,7 @@ module Jober::QueueBatchFeature
       perform(batch)
     rescue Object => ex
       reschedule_batch(batch)
-      Jober.exception(ex)
+      exception(ex)
     end
 
   private
