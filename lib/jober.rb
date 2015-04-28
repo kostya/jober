@@ -31,6 +31,10 @@ module Jober
 
     def redis=(r)
       @redis = r
+      reset_redis
+    end
+
+    def reset_redis
       Thread.current[:__jober_redis__] = nil
     end
 
@@ -57,10 +61,6 @@ module Jober
 
     def call_after_fork
       @after_fork.call if @after_fork
-    end
-
-    def reset_redis
-      redis.client.reconnect
     end
 
     def dump(obj)
