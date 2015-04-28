@@ -13,7 +13,13 @@ end
 Jober.logger = Logger.new nil
 
 t = Time.now
-50000.times { |i| Bench.enqueue(i, -i / 2.0) }
+threads = []
+5.times do |ti|
+  threads << Thread.new do
+    10000.times { |i| Bench.enqueue(i + ti * 10000, -(i + ti * 10000 ) / 2.0) }
+  end
+end
+threads.map(&:join)
 puts Time.now - t
 puts Bench.len
 

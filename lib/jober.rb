@@ -26,11 +26,12 @@ module Jober
     end
 
     def redis
-      @redis ||= Redis.new
+      Thread.current[:__jober_redis__] ||= (@redis || Redis.new).dup
     end
 
     def redis=(r)
       @redis = r
+      Thread.current[:__jober_redis__] = nil
     end
 
     def internal_classes_names
