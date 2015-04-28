@@ -42,6 +42,10 @@ module Jober
       @classes ||= []
     end
 
+    def names
+      classes.map { |k| underscore(k.to_s.gsub('Jober::', '')) }
+    end
+
     def add_class(klass)
       classes << klass unless internal_classes_names.include?(klass.to_s)
     end
