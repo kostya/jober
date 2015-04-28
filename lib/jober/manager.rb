@@ -81,7 +81,7 @@ class Jober::Manager
         add_pid(pid)
         Process.wait(pid)
         del_pid(pid)
-        sleep interval unless stopped
+        sleep interval.to_f unless stopped
       end
       del_pid(pid)
       break if stopped
