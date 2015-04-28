@@ -41,7 +41,7 @@ module Jober
 
     def internal_classes_names
       @internal_classes_names ||= (%w{Manager ThreadedManager AbstractTask Task Queue} +
-        %w{QueueBatch UniqueQueue UniqueQueueBatch Logger SharedObject ARLoop}).map { |k| "Jober::#{k}" }
+        %w{QueueBatch UniqueQueue UniqueQueueBatch Logger SharedObject ARLoop Exception}).map { |k| "Jober::#{k}" }
     end
 
     def classes

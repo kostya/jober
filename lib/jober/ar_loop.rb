@@ -16,15 +16,15 @@ class Jober::ARLoop < Jober::Task
   def run
     prox = proxy
 
-    if @worker_id && @workers_count && !@opts[:no_auto_proxy]
+    if @worker_id && @workers_count && @workers_count > 1 && !@opts[:no_auto_proxy]
       cond = "id % #{@workers_count} = #{@worker_id}"
       prox = prox.where(cond)
       info { "sharding enabled '#{cond}'" }
     end
 
-    if (lastbatchid = get_store("lastbatch")) && !@opts[:no_last_batch]
-      prox = prox.where("id > #{lastbatchid}")
-      info { "found last batch id #{lastbatchid} so start with it!" }
+    last_batch_id = if (_last_batch_id = get_store("lastbatch")) && !@opts[:no_last_batch]
+      info { "found last batch id #{last_batch_id} so start with it!" }
+      _last_batch_id
     end
 
     prox = prox.where(@opts[:where]) if @opts[:where]
@@ -33,7 +33,9 @@ class Jober::ARLoop < Jober::Task
     count = prox.count
     info { "full count to process #{count}" }
 
-    prox.find_in_batches(:batch_size => self.class.get_batch_size) do |batch|
+    h = {:batch_size => self.class.get_batch_size}
+    h[:start] = last_batch_id + 1 if last_batch_id
+    prox.find_in_batches(h) do |batch|
       res = perform(batch)
       cnt += batch.size
       info { "process batch #{res.inspect}, #{cnt} from #{count}, lastid #{batch.last.id}" }
@@ -42,5 +44,9 @@ class Jober::ARLoop < Jober::Task
     end
 
     info { "processed total #{cnt}" }
+  end
+
+  def reset_last_batch_id
+    Jober.redis.del(store_key('lastbatch'))
   end
 end

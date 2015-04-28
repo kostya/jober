@@ -84,8 +84,9 @@ describe "ARLoop" do
   it "should use lastbatch" do
     my = MyAR2.new
     Thread.new { my.execute }
-    sleep 2.5
+    sleep 1.5
     my.stop!
+    sleep 0.6
 
     SO["names"].size.should == 20
     SO["names"].last.should == "unknown 55"
@@ -96,4 +97,22 @@ describe "ARLoop" do
     SO["names"].size.should == 46
     SO["names"].last.should == "unknown 99"
   end
+
+  it "should not use lastbatch, if it was dropped" do
+    my = MyAR2.new
+    Thread.new { my.execute }
+    sleep 1.5
+    my.stop!
+    sleep 0.6
+
+    SO["names"].size.should == 20
+    SO["names"].last.should == "unknown 55"
+
+    # should start from last ID
+    my = MyAR2.new
+    my.reset_last_batch_id
+    my.execute
+    SO["names"].size.should == 66
+  end
+
 end
