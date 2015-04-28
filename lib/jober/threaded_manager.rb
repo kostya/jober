@@ -14,7 +14,11 @@ class Jober::ThreadedManager
     @klasses = klasses
     @stopped = false
     @objects = @klasses.map do |klass|
-      klass = Jober.find_class(klass) if klass.is_a?(String)
+      if klass.is_a?(String)
+        klass_str = klass
+        klass = Jober.find_class(klass_str)
+        raise "unknown class #{klass_str}" unless klass
+      end
       klass.new(opts)
     end
   end
