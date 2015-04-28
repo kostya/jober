@@ -25,6 +25,7 @@ class Jober::AbstractTask
   end
 
   attr_accessor :stopped
+  attr_reader :worker_id, :workers_count
 
   def self.inherited(base)
     Jober.add_class(base)
@@ -135,6 +136,23 @@ private
   def self.del_timestamp(type)
     Jober.catch do
       Jober.redis.del(timestamp_key(type))
+    end
+  end
+
+  def store_key(name)
+    Jober.key("store:#{self.class.short_name}-#{self.worker_id}-#{self.workers_count}:#{name}")
+  end
+
+  def set_store(name, obj)
+    self.catch do
+      Jober.redis.set(store_key(name), Jober.dump(obj))
+    end
+  end
+
+  def get_store(name)
+    self.catch do
+      r = Jober.redis.get(store_key(name))
+      Jober.load(r) if r
     end
   end
 

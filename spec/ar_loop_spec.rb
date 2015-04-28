@@ -14,6 +14,20 @@ class MyAR < Jober::ARLoop
   end
 end
 
+class MyAR2 < Jober::ARLoop
+  batch_size 10
+
+  def proxy
+    User.where("years > 18")
+  end
+
+  def perform(batch)
+    sleep 1
+    SO["names"] += batch.map(&:name)
+    batch.size
+  end
+end
+
 conn = { 'adapter' => 'sqlite3', 'database' => File.dirname(__FILE__) + "/test.db" }
 ActiveRecord::Base.establish_connection conn
 
@@ -65,5 +79,21 @@ describe "ARLoop" do
     MyAR.new(:where => "years < 24").execute
     SO["names"].size.should == 15
     SO["names"].last.should == "unknown 94"
+  end
+
+  it "should use lastbatch" do
+    my = MyAR2.new
+    Thread.new { my.execute }
+    sleep 2.5
+    my.stop!
+
+    SO["names"].size.should == 20
+    SO["names"].last.should == "unknown 55"
+
+    # should start from last ID
+    my = MyAR2.new
+    my.execute
+    SO["names"].size.should == 46
+    SO["names"].last.should == "unknown 99"
   end
 end

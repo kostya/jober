@@ -17,7 +17,14 @@ class Jober::ARLoop < Jober::Task
     prox = proxy
 
     if @worker_id && @workers_count && !@opts[:no_auto_proxy]
-      prox = prox.where("id % #{@workers_count} = #{@worker_id}")
+      cond = "id % #{@workers_count} = #{@worker_id}"
+      prox = prox.where(cond)
+      info { "sharding enabled '#{cond}'" }
+    end
+
+    if (lastbatchid = get_store("lastbatch")) && !@opts[:no_last_batch]
+      prox = prox.where("id > #{lastbatchid}")
+      info { "found last batch id #{lastbatchid} so start with it!" }
     end
 
     prox = prox.where(@opts[:where]) if @opts[:where]
@@ -30,6 +37,7 @@ class Jober::ARLoop < Jober::Task
       res = perform(batch)
       cnt += batch.size
       info { "process batch #{res.inspect}, #{cnt} from #{count}, lastid #{batch.last.id}" }
+      set_store("lastbatch", batch.last.id)
       break if stopped
     end
 
