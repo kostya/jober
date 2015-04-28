@@ -10,8 +10,8 @@ class Jober::ThreadedManager
     @default_sleep ||= 10
   end
 
-  def initialize(klasses, opts = {})
-    @klasses = klasses
+  def initialize(klasses = nil, opts = {})
+    @klasses = klasses || Jober.classes
     @stopped = false
     @objects = @klasses.map do |klass|
       if klass.is_a?(String)
