@@ -156,4 +156,8 @@ private
     end
   end
 
+  def self.stats
+    Jober.stats[self.short_name]
+  end
+
 end

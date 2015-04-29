@@ -24,7 +24,7 @@ class Jober::ThreadedManager
   end
 
   def run_loop
-    info { "run loop for #{@klasses}, in threads: #{@objects.length}" }
+    info { "run loop for #{@klasses.inspect}, in threads: #{@objects.length}" }
     @threads = @objects.map { |obj| make_thread(obj) }
 
     # set signals

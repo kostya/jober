@@ -31,5 +31,7 @@ describe "Stats" do
     h['my2'][:started].should be
     h['my2'][:finished].should be
     h['my2'][:duration].should be_within(0.1).of(0.0)
+
+    MyQueue2.stats[:started].should be
   end
 end
