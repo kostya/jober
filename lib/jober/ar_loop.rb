@@ -26,8 +26,8 @@ class Jober::ARLoop < Jober::Task
     end
 
     last_batch_id = if (_last_batch_id = get_store("lastbatch")) && !@opts[:no_last_batch]
-      info { "found last batch id #{_last_batch_id} so start with it!" }
-      prefix += "(#{_last_batch_id}:...) "
+      info { "Finded last_batch_id #{_last_batch_id} so start with it!" }
+      prefix += "(#{_last_batch_id}:) "
       _last_batch_id
     end
 
@@ -46,6 +46,8 @@ class Jober::ARLoop < Jober::Task
       set_store("lastbatch", batch.last.id)
       break if stopped
     end
+
+    reset_last_batch_id unless stopped
 
     info { "#{prefix}processed total #{cnt}" }
   end

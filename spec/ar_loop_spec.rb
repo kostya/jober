@@ -116,4 +116,14 @@ describe "ARLoop" do
     SO["names"].size.should == 66
   end
 
+  it "should not start from lastbatch if task was finished by itself, not by stop" do
+    my = MyAR2.new
+    my.execute
+    SO["names"].size.should == 46
+
+    # should start from zero
+    my = MyAR2.new
+    my.execute
+    SO["names"].size.should == 46 + 46
+  end
 end
