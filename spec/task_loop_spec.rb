@@ -31,6 +31,16 @@ class Loop2 < Jober::Task
   end
 end
 
+class Loop3 < Jober::Task
+  interval 3
+  def perform
+    c = 0
+    loop { sleep 1; c += 1; break if stopped || c > 4 }
+    SO["y"] ||= 0
+    SO["y"] += 1
+  end
+end
+
 describe "Task" do
   it "interval interval should be inherited" do
     AA1.get_interval.should == 10
@@ -68,7 +78,7 @@ describe "Task" do
     l.execute
     t = Thread.new { l.run_loop }
     sleep 2
-    l.stopped = true
+    l.stop!
     sleep 0.3
     SO["y"].should == 1
   end
@@ -79,7 +89,7 @@ describe "Task" do
     Loop2.skip_delay!
     t = Thread.new { l.run_loop }
     sleep 2
-    l.stopped = true
+    l.stop!
     sleep 0.3
     SO["y"].should == 2
   end
@@ -89,9 +99,42 @@ describe "Task" do
     l.execute
     t = Thread.new { l.run_loop }
     sleep 2
-    l.stopped = true
+    l.stop!
     sleep 0.3
     SO["y"].should == 2
+  end
+
+  describe "task was finished by itself or by stop!" do
+    it "if was finished by itself" do
+      l = Loop3.new
+      l.execute
+      SO["y"].should == 1
+
+      # next run should wait for 3 seconds
+      l = Loop3.new
+      t = Thread.new { l.run_loop }
+      sleep 2
+      l.stop!
+      sleep 0.3
+      SO["y"].should == 1
+    end
+
+    it "was stopped in middle, should start next imidiately" do
+      l = Loop3.new
+      t = Thread.new { l.execute }
+      sleep 2
+      l.stop!
+      sleep 0.3
+      SO["y"].should == 1
+
+      # next run should wait for 3 seconds
+      l = Loop3.new
+      t = Thread.new { l.run_loop }
+      sleep 2
+      l.stop!
+      sleep 0.3
+      SO["y"].should == 2
+    end
   end
 
   it "skip_delay!" do

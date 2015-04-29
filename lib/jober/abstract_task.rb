@@ -24,8 +24,7 @@ class Jober::AbstractTask
     attr_accessor :short_name
   end
 
-  attr_accessor :stopped
-  attr_reader :worker_id, :workers_count
+  attr_reader :stopped, :worker_id, :workers_count
 
   def self.inherited(base)
     Jober.add_class(base)
@@ -53,6 +52,11 @@ class Jober::AbstractTask
     run
     self.class.write_timestamp(:finished)
     self.class.del_timestamp(:crashed)
+    if @stopped
+      self.class.write_timestamp(:stopped)
+    else
+      self.class.del_timestamp(:stopped)
+    end
     info "<= end (in #{Time.now - @start_at})"
     self
   rescue Object
@@ -68,7 +72,8 @@ class Jober::AbstractTask
         (finished = self.class.read_timestamp(:finished)) &&
         (Time.now - finished < self.class.get_interval) &&
         !self.class.pop_skip_delay_flag! &&
-        !@skip_delay
+        !@skip_delay &&
+        !self.class.read_timestamp(:stopped)
 
       sleeping(self.class.get_interval - (Time.now - finished))
     end
@@ -98,6 +103,7 @@ class Jober::AbstractTask
 
   def stop!
     @stopped = true
+    self.class.write_timestamp(:stopped)
   end
 
 private
