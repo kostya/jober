@@ -24,7 +24,7 @@ class Jober::AbstractTask
     attr_accessor :short_name
   end
 
-  attr_reader :stopped, :worker_id, :workers_count
+  attr_reader :finished, :stopped, :worker_id, :workers_count
 
   def self.inherited(base)
     Jober.add_class(base)
@@ -58,6 +58,7 @@ class Jober::AbstractTask
       self.class.del_timestamp(:stopped)
     end
     info "<= end (in #{Time.now - @start_at})"
+    @finished = true
     self
   rescue Object
     self.class.write_timestamp(:crashed)

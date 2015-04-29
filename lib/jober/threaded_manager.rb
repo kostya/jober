@@ -39,10 +39,18 @@ class Jober::ThreadedManager
     # send stop to all objects
     @objects.each(&:stop!)
 
+    # sleep a little
+    sleep(0.2)
+
     # sleep a little to give time for threads to quit
     wait_for_kill(default_sleep.to_f)
 
-    info { "quit!" }
+    names = not_finished_objects_names
+    if names.empty?
+      info { "quit!" }
+    else
+      info { "quit! and force killing #{names.inspect}" }
+    end
 
     # kill all threads, if they still alive
     @threads.select(&:alive?).each(&:kill)
@@ -61,8 +69,12 @@ private
     end
   end
 
+  def not_finished_objects_names
+    @objects.reject(&:finished).map { |o| o.class.name }
+  end
+
   def wait_for_kill(interval)
-    info { "waiting quiting jobs for %.1fm ..." % [interval / 60.0] }
+    info { "waiting quiting jobs (#{not_finished_objects_names.inspect}) for %.1fm ..." % [interval / 60.0] }
     Timeout.timeout(interval.to_f) do
       loop do
         sleep 0.3
