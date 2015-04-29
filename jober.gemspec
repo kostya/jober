@@ -20,9 +20,9 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'redis'
 
-  spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
-  spec.add_development_dependency "activerecord"
-  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "activerecord", '~> 3.2'
+  spec.add_development_dependency "sqlite3-ruby"
+  spec.add_development_dependency "i18n", '~> 0.6.0'
 end
