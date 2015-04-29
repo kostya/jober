@@ -30,6 +30,7 @@ end
 
 conn = { 'adapter' => 'sqlite3', 'database' => File.dirname(__FILE__) + "/test.db" }
 ActiveRecord::Base.establish_connection conn
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 def pg_create_schema
   ActiveRecord::Migration.verbose = false
