@@ -48,6 +48,7 @@ class Jober::AbstractTask
   def execute
     info "=> start"
     @start_at = Time.now
+    @finished = false
     self.class.write_timestamp(:started)
     run
     self.class.del_timestamp(:crashed)

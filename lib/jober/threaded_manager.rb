@@ -70,7 +70,7 @@ private
   end
 
   def not_finished_objects_names
-    @objects.reject(&:finished).map { |o| o.class.name }
+    @objects.select { |o| o.finished == false }.map { |o| o.class.name }
   end
 
   def wait_for_kill(interval)
