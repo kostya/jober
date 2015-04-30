@@ -50,11 +50,11 @@ class Jober::AbstractTask
     @start_at = Time.now
     self.class.write_timestamp(:started)
     run
-    self.class.write_timestamp(:finished)
     self.class.del_timestamp(:crashed)
     if @stopped
       self.class.write_timestamp(:stopped)
     else
+      self.class.write_timestamp(:finished)
       self.class.del_timestamp(:stopped)
     end
     info "<= end (in #{Time.now - @start_at})"
@@ -104,7 +104,6 @@ class Jober::AbstractTask
 
   def stop!
     @stopped = true
-    self.class.write_timestamp(:stopped)
   end
 
 private

@@ -35,7 +35,7 @@ class Loop3 < Jober::Task
   interval 3
   def perform
     c = 0
-    loop { sleep 1; c += 1; break if stopped || c > 4 }
+    loop { sleep 1; c += 1; info { c.to_s }; break if stopped || c > 4 }
     SO["y"] ||= 0
     SO["y"] += 1
   end
@@ -105,6 +105,7 @@ describe "Task" do
   end
 
   describe "task was finished by itself or by stop!" do
+
     it "if was finished by itself" do
       l = Loop3.new
       l.execute
@@ -127,6 +128,8 @@ describe "Task" do
       sleep 0.3
       SO["y"].should == 1
 
+      Loop3.read_timestamp(:finished).should_not be
+
       # next run should wait for 3 seconds
       l = Loop3.new
       t = Thread.new { l.run_loop }
@@ -134,6 +137,24 @@ describe "Task" do
       l.stop!
       sleep 0.3
       SO["y"].should == 2
+    end
+
+    it "was restarted in the sleeping phase, should not start imidiately" do
+      l = Loop3.new
+      t = Thread.new { l.run_loop }
+      sleep 6
+
+      # here l in sleeping phase
+      l.stop!
+      SO["y"].should == 1
+      Loop3.read_timestamp(:finished).should be
+
+      l = Loop3.new
+      t = Thread.new { l.run_loop }
+      sleep 1
+      l.stop!
+      sleep 0.3
+      SO["y"].should == 1
     end
   end
 
