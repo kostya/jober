@@ -1,3 +1,3 @@
 module Jober
-  VERSION = "0.3.5"
+  VERSION = "0.3.27"
 end
