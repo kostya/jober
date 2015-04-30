@@ -107,10 +107,12 @@ module Jober
         started = klass.read_timestamp(:started)
         finished = klass.read_timestamp(:finished)
         crashed = klass.read_timestamp(:crashed)
+        stopped = klass.read_timestamp(:stopped)
         h[klass.short_name] = {
           :started => started,
           :finished => finished,
           :crashed => crashed,
+          :stopped => stopped,
           :duration => (finished && started && finished >= started) ? (finished - started) : nil
         }
       end
