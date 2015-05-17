@@ -51,8 +51,7 @@ class Jober::ARLoop < Jober::Task
       t1 = Time.now
       process_time = t1 - t
 
-      cnt += batch.size
-      info { "#{prefix}process batch #{res.inspect} | #{cnt} from #{count} | lastid #{batch.last.id} (#{format("%.1f", select_time)}s, #{format("%.1f", process_time)}s)" }
+      info { "#{prefix}process batch #{res.inspect} | #{cnt} from #{count} | lastid: #{batch.last.id} (#{format("%.1f", select_time)}s, #{format("%.1f", process_time)}s)" }
       set_store("lastbatch", batch.last.id)
       break if stopped
     end
