@@ -45,8 +45,13 @@ class Jober::AbstractTask
     @skip_delay = opts[:skip_delay]
   end
 
+  def before_execute
+    nil
+  end
+
   def execute
     info "=> start"
+    before_execute
     @start_at = Time.now
     @finished = false
     self.class.write_timestamp(:started)
@@ -60,10 +65,20 @@ class Jober::AbstractTask
     end
     info "<= end (in #{Time.now - @start_at})"
     @finished = true
+    after_execute
     self
   rescue Object
     self.class.write_timestamp(:crashed)
+    on_crashed
     raise
+  end
+
+  def after_execute
+    nil
+  end
+
+  def on_crashed
+    nil
   end
 
   def run_loop
