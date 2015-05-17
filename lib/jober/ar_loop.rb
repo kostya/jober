@@ -49,7 +49,11 @@ class Jober::ARLoop < Jober::Task
 
     reset_last_batch_id unless stopped
 
-    info { "#{prefix}processed total #{cnt}" }
+    info { "#{prefix}processed total #{cnt} #{summary_info}" }
+  end
+
+  def summary_info
+    nil
   end
 
   def reset_last_batch_id
