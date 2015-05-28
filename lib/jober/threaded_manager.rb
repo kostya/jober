@@ -11,7 +11,7 @@ class Jober::ThreadedManager
   end
 
   def initialize(klasses = nil, opts = {})
-    @klasses = Array(klasses || Jober.classes)
+    @klasses = Array(klasses || Jober.auto_classes)
     @stopped = false
     @objects = @klasses.map do |klass|
       if klass.is_a?(String)

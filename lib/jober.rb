@@ -48,6 +48,10 @@ module Jober
       @classes ||= []
     end
 
+    def auto_classes
+      classes.reject &:manual?
+    end
+
     def names
       classes.map { |k| underscore(k.to_s.gsub('Jober::', '')) }
     end

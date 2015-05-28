@@ -21,6 +21,14 @@ class Jober::AbstractTask
       @workers || 1
     end
 
+    def manual!
+      @manual = true
+    end
+
+    def manual?
+      @manual
+    end
+
     attr_accessor :short_name
   end
 
