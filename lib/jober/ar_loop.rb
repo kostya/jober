@@ -16,7 +16,7 @@ class Jober::ARLoop < Jober::Task
   def run
     prox = proxy
 
-    prefix = ''
+    prefix = log_prefix
 
     if @worker_id && @workers_count && @workers_count > 1 && !@opts[:no_auto_proxy]
       cond = "id % #{@workers_count} = #{@worker_id}"
@@ -37,7 +37,7 @@ class Jober::ARLoop < Jober::Task
     count = last_batch_id ? prox.where("id > ?", last_batch_id).count : prox.count
     info { "#{prefix}full count to process #{count}" }
 
-    h = {:batch_size => self.class.get_batch_size}
+    h = { :batch_size => self.class.get_batch_size }
     h[:start] = last_batch_id + 1 if last_batch_id
 
     t1 = Time.now
@@ -59,6 +59,10 @@ class Jober::ARLoop < Jober::Task
     reset_last_batch_id unless stopped
 
     info { "#{prefix}processed total #{cnt} #{summary_info}" }
+  end
+
+  def log_prefix
+    ''
   end
 
   def summary_info
