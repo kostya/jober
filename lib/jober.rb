@@ -98,7 +98,7 @@ module Jober
 
     def llens
       h = {}
-      @classes.each do |klass|
+      auto_classes.each do |klass|
         next unless klass.ancestors.include?(Jober::Queue)
         h[klass.queue_name_base] = klass.len
       end
@@ -107,7 +107,7 @@ module Jober
 
     def stats
       h = {}
-      @classes.each do |klass|
+      auto_classes.each do |klass|
         started = klass.read_timestamp(:started)
         finished = klass.read_timestamp(:finished)
         crashed = klass.read_timestamp(:crashed)
