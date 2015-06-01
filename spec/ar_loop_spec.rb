@@ -76,6 +76,12 @@ describe "ARLoop" do
     SO["names"].last.should == "unknown 96"
   end
 
+  it "use auto proxy sharding, work with string values" do
+    MyAR.new(:worker_id => '1', :workers_count => '4').execute
+    SO["names"].size.should == 10
+    SO["names"].last.should == "unknown 96"
+  end
+
   it "where" do
     MyAR.new(:where => "years < 24").execute
     SO["names"].size.should == 15

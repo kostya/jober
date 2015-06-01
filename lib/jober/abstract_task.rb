@@ -48,8 +48,8 @@ class Jober::AbstractTask
     @stopped = false
     trap("QUIT") { @stopped = true }
     trap("INT")  { @stopped = true }
-    @worker_id = opts[:worker_id] || 0
-    @workers_count = opts[:workers_count] || 1
+    @worker_id = (opts[:worker_id] || 0).to_i
+    @workers_count = (opts[:workers_count] || 1).to_i
     @skip_delay = opts[:skip_delay]
   end
 
