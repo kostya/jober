@@ -31,7 +31,10 @@ class Jober::ARLoop < Jober::Task
       _last_batch_id
     end
 
-    prox = prox.where(@opts[:where]) if @opts[:where]
+    if @opts[:where]
+      prox = prox.where(@opts[:where])
+      prefix += "(cwhere) "
+    end
 
     cnt = 0
     count = last_batch_id ? prox.where("id > ?", last_batch_id).count : prox.count
