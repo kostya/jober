@@ -36,6 +36,14 @@ end.parse!
 
 if req = options[:require]
   require File.expand_path(req)
+else
+  filenames = []
+  filenames << File.expand_path(ENV['APP_ROOT']) if ENV['APP_ROOT']
+  filenames << File.expand_path('config/environment')
+  filenames << File.expand_path('config/environment.rb')
+  filenames.each do |filename|
+    require filename if File.exist?(filename)
+  end
 end
 
 klass_name = options[:klass]
