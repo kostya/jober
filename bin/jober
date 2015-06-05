@@ -50,7 +50,7 @@ klass_name = options[:klass]
 klass = Jober.find_class(klass_name)
 
 unless klass
-  puts "not found class #{klass_name}"
+  puts "Please set class_name by option -c"
   exit(1)
 end
 
