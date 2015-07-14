@@ -12,6 +12,7 @@ module Jober::Logger
   def logger_tag
     @logger_tag ||= begin
       tag = '[' + self.class.to_s
+      tag += "(#{unique_id})" if respond_to?(:unique_id) && unique_id.to_i > 0
       tag += " #{@worker_id}-#{@workers_count}" if @worker_id && @workers_count && @workers_count > 1
       tag += ']'
       tag

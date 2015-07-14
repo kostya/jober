@@ -3,6 +3,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 class T1 < Jober::Task
   def perform
     SO["t1"] += 1
+    SO["un"] += [unique_id]
   end
 end
 
@@ -57,6 +58,7 @@ describe Jober::ThreadedManager do
     SO["t3"] = 0
     SO["t41"] = 0
     SO["t5"] = 0
+    SO["un"] = []
   end
 
   it "just work" do
@@ -64,9 +66,10 @@ describe Jober::ThreadedManager do
     SO["t1"].should == 1
   end
 
-  xit "run multiple identical tasks" do
-    run_threaded_manager_for(0.2, [T1, T1, T1])
-    SO["t"].should == 3
+  it "run multiple identical tasks" do
+    run_threaded_manager_for(0.5, [T1, T1, T1])
+    sleep 0.2
+    SO["un"].sort.should == [0, 1, 2]
   end
 
   it "run multiple tasks" do

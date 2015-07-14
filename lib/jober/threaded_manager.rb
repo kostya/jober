@@ -13,13 +13,16 @@ class Jober::ThreadedManager
   def initialize(klasses = nil, opts = {})
     @klasses = Array(klasses || Jober.auto_classes)
     @stopped = false
+    h = Hash.new(0)
     @objects = @klasses.map do |klass|
       if klass.is_a?(String)
         klass_str = klass
         klass = Jober.find_class(klass_str)
         raise "unknown class #{klass_str}" unless klass
       end
-      klass.new(opts)
+      obj = klass.new(opts.merge(:unique_id => h[klass]))
+      h[klass] += 1
+      obj
     end
   end
 

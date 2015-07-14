@@ -32,7 +32,7 @@ class Jober::AbstractTask
     attr_accessor :short_name
   end
 
-  attr_reader :finished, :stopped, :worker_id, :workers_count
+  attr_reader :finished, :stopped, :worker_id, :workers_count, :unique_id
 
   def self.inherited(base)
     Jober.add_class(base)
@@ -51,6 +51,7 @@ class Jober::AbstractTask
     @worker_id = (opts[:worker_id] || 0).to_i
     @workers_count = (opts[:workers_count] || 1).to_i
     @skip_delay = opts[:skip_delay]
+    @unique_id = opts[:unique_id]
   end
 
   def before_execute
