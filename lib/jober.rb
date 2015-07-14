@@ -9,6 +9,7 @@ module Jober
   autoload :AbstractTask,     'jober/abstract_task'
   autoload :Task,             'jober/task'
   autoload :Queue,            'jober/queue'
+  autoload :SlowQueue,        'jober/slow_queue'
   autoload :QueueBatch,       'jober/queue_batch'
   autoload :UniqueQueue,      'jober/unique_queue'
   autoload :Logger,           'jober/logger'
@@ -40,7 +41,7 @@ module Jober
     end
 
     def internal_classes_names
-      @internal_classes_names ||= (%w{Manager ThreadedManager AbstractTask Task Queue} +
+      @internal_classes_names ||= (%w{Manager ThreadedManager AbstractTask Task Queue SlowQueue} +
         %w{QueueBatch UniqueQueue UniqueQueueBatch Logger SharedObject ARLoop Exception}).map { |k| "Jober::#{k}" }
     end
 
