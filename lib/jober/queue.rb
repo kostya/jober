@@ -22,6 +22,10 @@ class Jober::Queue < Jober::Task
     Jober.redis.rpush(queue_name, Jober.dump_args(*args))
   end
 
+  def self.dequeue(*args)
+    Jober.redis.lpush(queue_name, Jober.dump_args(*args))
+  end
+
   def self.len
     Jober.redis.llen(self.queue_name)
   end
