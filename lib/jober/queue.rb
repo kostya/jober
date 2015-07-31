@@ -41,8 +41,8 @@ class Jober::Queue < Jober::Task
 
   def run
     cnt = 0
-    while args = pop
-      perform(*args)
+    while @args = pop
+      perform(*@args)
       cnt += 1
 
       if stopped
@@ -52,5 +52,13 @@ class Jober::Queue < Jober::Task
       info { "processed #{cnt}" } if cnt % 1000 == 0
     end
     info { "processed total #{cnt}" }
+  end
+
+  def retry_event
+    self.class.dequeue(*@args) if @args
+  end
+
+  def retry_event_later
+    self.class.enqueue(*@args) if @args
   end
 end

@@ -13,6 +13,34 @@ class MyQueue < Jober::Queue
   end
 end
 
+class MyQueueR2 < Jober::Queue
+  def initialize(*args)
+    super
+    @counter = 0
+  end
+
+  attr_reader :counter
+
+  def perform(x)
+    @counter += x
+    retry_event if @counter < 10
+  end
+end
+
+class MyQueueR3 < Jober::Queue
+  def initialize(*args)
+    super
+    @counter = 0
+  end
+
+  attr_reader :counter
+
+  def perform(x)
+    @counter += x
+    retry_event_later if @counter < 10
+  end
+end
+
 class Jasdfoadsfjaf < Jober::Queue
   set_queue_name 'human_name'
 
@@ -41,4 +69,15 @@ describe "Queue" do
     10.times { Jasdfoadsfjaf.enqueue }
     Jober.llens['human_name'].should == 10
   end
+
+  it "retry_event" do
+    MyQueueR2.enqueue(1)
+    MyQueueR2.new.execute.counter.should == 10
+  end
+
+  it "retry_event_later" do
+    MyQueueR3.enqueue(1)
+    MyQueueR3.new.execute.counter.should == 10
+  end
+
 end
