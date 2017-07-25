@@ -26,6 +26,12 @@ class Jober::ThreadedManager
     end
   end
 
+  def set_objects(objects)
+    c = 0
+    objects.each { |o| o.instance_variable_set(:@unique_id, c); c += 1 }
+    @objects = objects
+  end
+
   def run_loop
     info { "run loop for #{@klasses.inspect}, in threads: #{@objects.length}" }
     @threads = @objects.map { |obj| make_thread(obj) }
