@@ -52,6 +52,10 @@ class Jober::AbstractTask
     @workers_count = (opts[:workers_count] || 1).to_i
     @skip_delay = opts[:skip_delay]
     @unique_id = opts[:unique_id]
+    after_initialize
+  end
+
+  def after_initialize
   end
 
   def before_execute
